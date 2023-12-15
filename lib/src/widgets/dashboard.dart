@@ -135,14 +135,14 @@ class _StatisticChartState extends State<StatisticChart>
         _buildAnimatedBarChartGroupData(
             1, 5, Color(0xff4caf50), _animationController.view),
         _buildAnimatedBarChartGroupData(
-            2, 1, Color(0xffff9800), _animationController.view),
+            2, 2.7, Color(0xffff9800), _animationController.view),
         // Barras adicionales para una animación más dinámica
         _buildAnimatedBarChartGroupData(
             3, 4, Color(0xffe91e63), _animationController.view),
         _buildAnimatedBarChartGroupData(
-            4, 6, Color(0xff795548), _animationController.view),
+            4, 4.5, Color(0xff795548), _animationController.view),
         _buildAnimatedBarChartGroupData(
-            5, 6, Color(0xff00bcd4), _animationController.view),
+            5, 5.8, Color(0xff00bcd4), _animationController.view),
       ],
     );
   }
@@ -170,7 +170,7 @@ class _StatisticChartState extends State<StatisticChart>
             ),
             SizedBox(height: 20.0),
             Container(
-              height: 500.0,
+              height: 550.0,
               child: AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {

@@ -14,6 +14,85 @@ class MenuLateral extends StatelessWidget {
 
   const MenuLateral({Key? key});
 
+  Widget buildMenuLateral(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text(nombreUsuario),
+            accountEmail: Text(correoUsuario),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                nombreUsuario.isNotEmpty ? nombreUsuario[0] : "",
+                style: TextStyle(fontSize: 40.0),
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 201, 223, 255),
+            ),
+          ),
+          ListTile(
+            title: Text("Administración Empresa"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Empleados"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EmpleadosCrud()),
+              );
+            },
+            leading: Icon(Icons.person),
+          ),
+          ListTile(
+            title: Text("Activos"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InsumosCrud()),
+              );
+            },
+            leading: Icon(Icons.business),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Administración Usuarios"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text("Equipo de Trabajo"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+            leading: Icon(Icons.security),
+          ),
+          ListTile(
+            title: Text("Usuarios"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UsuariosCrud()),
+              );
+            },
+            leading: Icon(Icons.person_add),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,98 +100,10 @@ class MenuLateral extends StatelessWidget {
         title: Text("UARC"),
         backgroundColor: Color.fromARGB(255, 201, 223, 255),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: Text(nombreUsuario),
-              accountEmail: Text(correoUsuario),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text(
-                  nombreUsuario.isNotEmpty ? nombreUsuario[0] : "",
-                  style: TextStyle(fontSize: 40.0),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 201, 223, 255),
-              ),
-            ),
-            ListTile(
-              title: Text("Administración Empresa"),
-              onTap: () {
-                // Acción al seleccionar Administración Empresa
-                Navigator.pop(
-                    context); // Cerrar el menú lateral si es necesario
-                // Lógica para navegar a la sección o pantalla de Administración Empresa
-              },
-            ),
-            Divider(), // Separador entre secciones
-            ListTile(
-              title: Text("Empleados"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EmpleadosCrud()),
-                );
-              },
-              leading: Icon(Icons.person), // Icono para Empleados
-            ),
-            ListTile(
-              title: Text("Activos"),
-              onTap: () {
-                // Acción al seleccionar Activos
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            InsumosCrud())); // Cerrar el menú lateral si es necesario
-                // Lógica para navegar a la pantalla de Activos
-              },
-              leading: Icon(Icons.business), // Icono para Activos
-            ),
-            Divider(), // Separador entre secciones
-            ListTile(
-              title: Text("Administración Usuarios"),
-              onTap: () {
-                // Cerrar el menú lateral si es necesario
-                // Lógica para navegar a la sección o pantalla de Administración Usuarios
-              },
-            ),
-            Divider(), // Separador entre secciones
-            ListTile(
-              title: Text("Equipo de Trabajo"),
-              onTap: () {
-                // Acción al seleccionar Roles
-                Navigator.pop(context);
-                // Cerrar el menú lateral si es necesario
-                // Lógica para navegar a la pantalla de Roles
-              },
-              leading: Icon(Icons.security), // Icono para Roles
-            ),
-            ListTile(
-              title: Text("Usuarios"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UsuariosCrud()),
-                );
-                // Cerrar el menú lateral si es necesario
-                // Lógica para navegar a la pantalla de Usuarios
-              },
-              leading: Icon(Icons.person_add), // Icono para Usuarios
-            ),
-          ],
-        ),
-      ),
+      drawer: buildMenuLateral(context),
       body: StatisticChart(),
-        // Lógica para manejar la selección de las secciones rápidas
-        // Puedes implementar la lógica de navegación aquí si es necesario
-      
+      // Lógica para manejar la selección de las secciones rápidas
+      // Puedes implementar la lógica de navegación aquí si es necesario
     );
   }
 }

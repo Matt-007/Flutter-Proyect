@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uarc/src/widgets/dashboard.dart';
+import 'package:uarc/src/widgets/empleados.dart';
+import 'package:uarc/src/widgets/insumos.dart';
+import 'package:uarc/src/widgets/equipoDeTrabajo.dart';
+import 'package:uarc/src/widgets/usuarios.dart';
 
 class UsuariosCrud extends StatefulWidget {
   @override
@@ -7,17 +12,98 @@ class UsuariosCrud extends StatefulWidget {
 
 class _UsuariosCrudState extends State<UsuariosCrud> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _correoController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+  final TextEditingController _rolController = TextEditingController();
 
-  String _nombre = '';
-  String _correo = '';
-  String _contrasena = '';
-  String _rol = '';
+  List<Map<String, String>> usuarios = [];
+  bool isEditing = false;
+  int editingIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('CRUD de Usuarios'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("Nombre de Usuario"),
+              accountEmail: Text("usuario@correo.com"),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Text(
+                  "Nombre de Usuario".isNotEmpty ? "Nombre de Usuario"[0] : "",
+                  style: TextStyle(fontSize: 40.0),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 201, 223, 255),
+              ),
+            ),
+            ListTile(
+              title: Text("Administración Empresa"),
+              onTap: () {
+                Navigator.pop(context);
+                // Lógica para navegar a la sección o pantalla de Administración Empresa
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text("Empleados"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EmpleadosCrud()),
+                );
+              },
+              leading: Icon(Icons.person),
+            ),
+            ListTile(
+              title: Text("Insumos"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InsumosCrud()),
+                );
+              },
+              leading: Icon(Icons.business),
+            ),
+            Divider(),
+            ListTile(
+              title: Text("Administración Usuarios"),
+              onTap: () {
+                // Lógica para navegar a la sección o pantalla de Administración Usuarios
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text("Equipo de Trabajo"),
+              onTap: () {
+                Navigator.pop(context);
+                // Lógica para navegar a la pantalla de Roles
+              },
+              leading: Icon(Icons.security),
+            ),
+            ListTile(
+              title: Text("Usuarios"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UsuariosCrud()),
+                );
+              },
+              leading: Icon(Icons.person_add),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -26,7 +112,42 @@ class _UsuariosCrudState extends State<UsuariosCrud> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Lista de usuarios
+              Expanded(
+                child: ListView.builder(
+                  itemCount: usuarios.length,
+                  itemBuilder: (context, index) {
+                    final usuario = usuarios[index];
+                    return ListTile(
+                      title: Text('${usuario['nombre']}'),
+                      subtitle: Text(
+                          'Correo: ${usuario['correo']}, Rol: ${usuario['rol']}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              // Editar usuario
+                              editUsuario(index);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              // Eliminar usuario
+                              deleteUsuario(index);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              // Formulario para agregar o editar usuario
               TextFormField(
+                controller: _nombreController,
                 decoration: InputDecoration(labelText: 'Nombre'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -34,11 +155,9 @@ class _UsuariosCrudState extends State<UsuariosCrud> {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _nombre = value!;
-                },
               ),
               TextFormField(
+                controller: _correoController,
                 decoration: InputDecoration(labelText: 'Correo'),
                 validator: (value) {
                   if (value == null || value.isEmpty || !value.contains('@')) {
@@ -46,11 +165,9 @@ class _UsuariosCrudState extends State<UsuariosCrud> {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _correo = value!;
-                },
               ),
               TextFormField(
+                controller: _contrasenaController,
                 decoration: InputDecoration(labelText: 'Contraseña'),
                 obscureText: true,
                 validator: (value) {
@@ -59,11 +176,9 @@ class _UsuariosCrudState extends State<UsuariosCrud> {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _contrasena = value!;
-                },
               ),
               TextFormField(
+                controller: _rolController,
                 decoration: InputDecoration(labelText: 'Rol'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -71,26 +186,98 @@ class _UsuariosCrudState extends State<UsuariosCrud> {
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _rol = value!;
-                },
               ),
               SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Aquí puedes implementar la lógica para guardar los datos
-                    // Por ejemplo, enviar los datos a un servicio o base de datos
-                    // _nombre, _correo, _contrasena, _rol contienen los valores
-                  }
-                },
-                child: Text('Guardar'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Guardar usuario
+                      saveUsuario();
+                    },
+                    child: Text('Guardar'),
+                  ),
+                  SizedBox(width: 8.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Limpiar formulario
+                      resetForm();
+                    },
+                    child: Text('Limpiar'),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void saveUsuario() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      if (isEditing) {
+        // Editar el usuario existente
+        usuarios[editingIndex] = {
+          'nombre': _nombreController.text,
+          'correo': _correoController.text,
+          'contrasena': _contrasenaController.text,
+          'rol': _rolController.text,
+        };
+        // Resetear el estado de edición
+        isEditing = false;
+        editingIndex = -1;
+      } else {
+        // Agregar un nuevo usuario
+        usuarios.add({
+          'nombre': _nombreController.text,
+          'correo': _correoController.text,
+          'contrasena': _contrasenaController.text,
+          'rol': _rolController.text,
+        });
+      }
+
+      // Limpiar el formulario
+      resetForm();
+
+      // Actualizar la interfaz
+      setState(() {});
+    }
+  }
+
+  void resetForm() {
+    _formKey.currentState?.reset();
+    _nombreController.clear();
+    _correoController.clear();
+    _contrasenaController.clear();
+    _rolController.clear();
+    isEditing = false;
+    editingIndex = -1;
+  }
+
+  void editUsuario(int index) {
+    // Editar el usuario seleccionado
+    isEditing = true;
+    editingIndex = index;
+
+    // Poblar el formulario con los datos del usuario seleccionado
+    _nombreController.text = usuarios[index]['nombre']!;
+    _correoController.text = usuarios[index]['correo']!;
+    _contrasenaController.text = usuarios[index]['contrasena']!;
+    _rolController.text = usuarios[index]['rol']!;
+
+    // Actualizar la interfaz
+    setState(() {});
+  }
+
+  void deleteUsuario(int index) {
+    // Eliminar el usuario seleccionado
+    usuarios.removeAt(index);
+    // Resetear el estado de edición
+    resetForm();
+    // Actualizar la interfaz
+    setState(() {});
   }
 }
