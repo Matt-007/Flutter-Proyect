@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:uarc/src/widgets/dashboard.dart';
 import 'package:uarc/src/widgets/empleados.dart';
 import 'package:uarc/src/widgets/insumos.dart';
-// ignore: unused_import
 import 'package:uarc/src/widgets/equipoDeTrabajo.dart';
 import 'package:uarc/src/widgets/usuarios.dart';
 
@@ -74,6 +73,10 @@ class MenuLateral extends StatelessWidget {
             title: Text("Equipo de Trabajo"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GrupoTrabajoWidget())
+                );
             },
             leading: Icon(Icons.security),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uarc/src/pages/menuLateral.dart';
 import 'package:uarc/src/widgets/insumos.dart';
 import 'package:uarc/src/widgets/usuarios.dart';
 
@@ -24,7 +25,18 @@ class _EmpleadosCrudState extends State<EmpleadosCrud> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CRUD de Empleados'),
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MenuLateral()), // Navega a StatisticChart()
+            );
+          },
+          child: Text('UARC'), // Cambia el título del AppBar a "UARC"
+        ),
+        backgroundColor: const Color.fromARGB(255, 201, 223, 255),
       ),
       drawer: Drawer(
         child: ListView(
@@ -56,6 +68,10 @@ class _EmpleadosCrudState extends State<EmpleadosCrud> {
               title: Text("Empleados"),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EmpleadosCrud()),
+                ); // Redirige a la pantalla actual (EmpleadosCrud)
               },
               leading: Icon(Icons.person),
             ),
@@ -108,6 +124,20 @@ class _EmpleadosCrudState extends State<EmpleadosCrud> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+                  Container(
+        color: Colors.white, // Color de fondo blanco
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(
+          child: Text(
+            'EMPLEADOS', // Título 'EMPLEADOS'
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      SizedBox(height: 16.0),
             // Lista de empleados
             Expanded(
               child: ListView.builder(
